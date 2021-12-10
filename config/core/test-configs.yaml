@@ -88,6 +88,9 @@ file_systems:
     nfs: 'buster-ltp/20211203.0/{arch}/full.rootfs.tar.xz'
     root_type: nfs
 
+  debian_buster-ltp_qemu:
+    type: debian
+    ramdisk: 'buster-ltp/20211203.0/{arch}/rootfs.cpio.gz'
 
 test_plan_default_filters:
 
@@ -331,6 +334,15 @@ test_plans:
   ltp-timers:
     <<: *ltp
     pattern: 'ltp/{category}-{method}-{protocol}-{rootfs}-ltp-open-posix-template.jinja2'
+    params:
+      <<: *ltp-params
+      grp_test: "TMR"
+      job_timeout: '30'
+
+  ltp-timers-qemu:
+    <<: *ltp
+    rootfs: debian_buster-ltp_qemu
+    pattern: 'ltp/{category}-{method}-{rootfs}-ltp-open-posix-template.jinja2'
     params:
       <<: *ltp-params
       grp_test: "TMR"
@@ -2358,6 +2370,7 @@ test_configs:
     test_plans:
       - baseline_qemu
       - baseline-qemu-docker
+      - ltp-timers-qemu
       - smc
       - v4l2-compliance-vivid
 
