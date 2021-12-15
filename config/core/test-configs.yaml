@@ -358,8 +358,9 @@ test_plans:
       grp_test: "TMR"
       job_timeout: '30'
 
-  ltp-timers-qemu:
+  ltp-timers_qemu:
     <<: *ltp
+    basename: ltp-timers
     rootfs: debian_buster-ltp_qemu
     pattern: 'ltp/{category}-{method}-{rootfs}-ltp-open-posix-template.jinja2'
     params:
@@ -2326,7 +2327,7 @@ test_configs:
     test_plans:
       - baseline_qemu
       - baseline-qemu-docker
-      - ltp-timers-qemu
+      - ltp-timers_qemu
       - smc
       - v4l2-compliance-vivid
 
