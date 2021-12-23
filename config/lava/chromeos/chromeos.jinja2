@@ -1,0 +1,27 @@
+- test:
+    timeout: 15
+      minutes: {{ job_timeout }}
+    definitions:
+    - from: inline
+      repository:
+        metadata:
+          format: Lava-Test Test Definition 1.0
+          name: chromeos-flash
+          description: "chromeos-flash"
+        os:
+          - oe
+        scope:
+          - functional
+        environment:
+          - lava-test-shell
+        run:
+          steps:
+              - echo "nameserver 8.8.8.8" > /etc/resolv.conf
+              - wget https://images.collabora.com/lava/chromeos/chromeos-flash-modules.sh
+              - /bin/bash chromeos-flash-modules.sh
+      from: inline
+      name: dmesg
+      path: inline/chromeos-flash.yaml
+
+    - repository: tast tarball?
+      name: {{ specific_tast_test }}
