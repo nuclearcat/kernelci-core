@@ -46,8 +46,15 @@ def sort_check(keys):
     sorted_keys = sorted(
         split_keys,
         key=lambda x: list(fmt.format(int(k)) if k.isdigit() else k for k in x)
+#        key=lambda x: list(fmt.format(int(k)) if (k.isdigit() and k != '14') else k for k in x)
     )
     for key_raw, key_sorted in zip(split_keys, sorted_keys):
         if key_raw != key_sorted:
+#            print(list(fmt.format(int(k)) if k.isdigit() else k for k in key_raw))
+#            print(list(fmt.format(int(k)) if k.isdigit() else k for k in key_sorted))
+#            for k in sorted_keys:
+#                print(k)
+#            for k in split_keys:
+#                print(k)
             return keys_map[key_raw], keys_map[key_sorted]
     return None
