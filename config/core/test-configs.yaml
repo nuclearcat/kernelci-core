@@ -281,6 +281,12 @@ test_plans:
       job_timeout: '10'
       kselftest_collections: "lkdtm"
 
+  kselftest-rtc:
+    <<: *kselftest
+    params:
+      job_timeout: '10'
+      kselftest_collections: "rtc"
+
   kselftest-seccomp:
     <<: *kselftest
     params:
@@ -2265,6 +2271,7 @@ test_configs:
       - kselftest-futex
       - kselftest-lib
       - kselftest-lkdtm
+      - kselftest-rtc
       - kselftest-seccomp
       - lc-compliance
       - ltp-crypto
