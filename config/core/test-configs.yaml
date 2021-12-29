@@ -367,7 +367,7 @@ test_plans:
   ltp-timers_qemu:
     <<: *ltp
     basename: ltp-timers
-    rootfs: debian_buster-ltp_qemu
+    rootfs: debian_buster-ltp_ramdisk
     pattern: 'ltp/{category}-{method}-{rootfs}-ltp-open-posix-template.jinja2'
     params:
       <<: *ltp-params
