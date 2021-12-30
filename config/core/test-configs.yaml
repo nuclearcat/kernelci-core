@@ -1854,6 +1854,10 @@ test_configs:
     test_plans:
       - baseline
       - baseline-nfs
+      - kselftest-filesystems
+      - kselftest-futex
+      - kselftest-lib
+      - kselftest-livepatch
       - kselftest-lkdtm
       - kselftest-seccomp
       - ltp-fcntl-locktests
@@ -1866,6 +1870,10 @@ test_configs:
       - baseline-nfs
       - kselftest-filesystems
       - kselftest-futex
+      - kselftest-lib
+      - kselftest-livepatch
+      - kselftest-lkdtm
+      - kselftest-seccomp
       - ltp-ipc
       - ltp-mm
       - ltp-timers
@@ -1879,6 +1887,7 @@ test_configs:
       - kselftest-filesystems
       - kselftest-futex
       - kselftest-lib
+      - kselftest-livepatch
       - kselftest-lkdtm
       - kselftest-seccomp
       - ltp-crypto
