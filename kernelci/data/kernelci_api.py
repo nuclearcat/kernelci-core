@@ -69,6 +69,12 @@ class KernelCI_API(Database):
     def get_node_from_event(self, event):
         return self.get_node(event.data['id'])
 
+    def _put(self, path, data=None):
+        url = self._make_url(path)
+        resp = requests.put(url, headers=self._headers, data=data)
+        resp.raise_for_status()
+        return resp
+
     def submit(self, data, verbose=False):
         obj_list = []
         for path, item in data.items():
