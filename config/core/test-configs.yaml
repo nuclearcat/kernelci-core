@@ -32,7 +32,7 @@ file_system_types:
 
 file_systems:
 
-  buildroot_baseline_ramdisk:
+  buildroot-baseline_ramdisk:
     type: buildroot
     ramdisk: 'buildroot-baseline/20211210.0/{arch}/rootfs.cpio.gz'
 
@@ -80,7 +80,7 @@ file_systems:
     type: debian
     ramdisk: 'bullseye-rt/20211216.0/{arch}/rootfs.cpio.gz'
 
-  debian_buster_kselftest:
+  debian_buster-kselftest_nfs:
     type: debian
     ramdisk: 'buster-kselftest/20211224.2/{arch}/initrd.cpio.gz'
     nfs: 'buster-kselftest/20211224.2/{arch}/full.rootfs.tar.xz'
@@ -122,7 +122,7 @@ default_filters:
 test_plans:
 
   baseline:
-    rootfs: buildroot_baseline_ramdisk
+    rootfs: buildroot-baseline_ramdisk
     filters:
       - blocklist: *kselftest_defconfig_filter
 
@@ -133,7 +133,7 @@ test_plans:
       - blocklist: *kselftest_defconfig_filter
 
   baseline-fastboot:
-    rootfs: buildroot_baseline_ramdisk
+    rootfs: buildroot-baseline_ramdisk
     pattern: 'baseline/generic-fastboot-baseline-template.jinja2'
     params:
       job_timeout: '50'
@@ -146,13 +146,13 @@ test_plans:
 
   baseline_qemu:
     base_name: baseline
-    rootfs: buildroot_baseline_ramdisk
+    rootfs: buildroot-baseline_ramdisk
     pattern: 'baseline/generic-qemu-baseline-template.jinja2'
     filters:
       - blocklist: *kselftest_defconfig_filter
 
   baseline-qemu-docker:
-    rootfs: buildroot_baseline_ramdisk
+    rootfs: buildroot-baseline_ramdisk
     pattern: 'baseline/generic-qemu-baseline-docker-template.jinja2'
     filters:
       - blocklist: *kselftest_defconfig_filter
@@ -242,7 +242,7 @@ test_plans:
       drm_driver: "tegra"
 
   kselftest: &kselftest
-    rootfs: debian_buster_kselftest
+    rootfs: debian_buster-kselftest_nfs
     pattern: 'kselftest/{category}-{method}-{protocol}-{rootfs}-kselftest-template.jinja2'
     filters:
       - passlist: {defconfig: ['kselftest']}
@@ -392,7 +392,7 @@ test_plans:
       sleep_params: mem
 
   smc:
-    rootfs: buildroot_baseline_ramdisk
+    rootfs: buildroot-baseline_ramdisk
 
   usb:
     rootfs: debian_bullseye_ramdisk
