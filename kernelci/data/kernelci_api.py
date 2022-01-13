@@ -50,6 +50,12 @@ class KernelCI_API(Database):
         resp.raise_for_status()
         return resp
 
+    def _put(self, path, data=None):
+        url = self._make_url(path)
+        resp = requests.put(url, headers=self._headers, data=data)
+        resp.raise_for_status()
+        return resp
+
     def subscribe(self, channel):
         resp = self._post(f'subscribe/{channel}')
         return json.loads(resp.text)['id']
@@ -73,7 +79,10 @@ class KernelCI_API(Database):
         obj_list = []
         for path, item in data.items():
             try:
-                resp = self._post(path, json.dumps(item))
+                if 'id' in item.keys():
+                    resp = self._put(path, json.dumps(item))
+                else:
+                    resp = self._post(path, json.dumps(item))
             except requests.exceptions.HTTPError as ex:
                 self._print_http_error(ex, verbose)
                 raise(ex)
