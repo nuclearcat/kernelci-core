@@ -2518,6 +2518,7 @@ test_configs:
       - baseline
       - baseline-nfs
       - cros-ec
+      - kselftest-rtc
       - ltp-fcntl-locktests
       - ltp-pty
       - ltp-timers
