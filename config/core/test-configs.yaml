@@ -171,6 +171,7 @@ test_plans:
           lab:
             - 'lab-baylibre'
             - 'lab-broonie'
+            - 'lab-collabora'
             - 'lab-collabora-staging'
 
   cros-ec:
