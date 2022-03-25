@@ -40,6 +40,10 @@ staging-gcc-10: &staging-gcc-10
     arm:
       <<: *arm_defconfig
       fragments: [crypto]
+      extra_configs:
+        - 'at91_dt_defconfig'
+      filters:
+        - passlist: { defconfig: ['multi_v7_defconfig', 'at91_dt_defconfig'] }
     arm64:
       <<: *arm64_defconfig
       fragments: [arm64-chromebook, crypto, preempt_rt]
