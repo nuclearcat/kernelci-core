@@ -7,6 +7,38 @@
 {{ super () }}
 
 actions:
+{% if fixed_kernel is not defined %}
+- deploy:
+    to: downloads
+    images:
+        rootfs:
+             url: {{ rootfs_url }}chromiumos_test_image.bin.gz
+             compression: gz
+        kernel:
+             url: {{ kernel_url }}
+        modules:
+             url: {{ modules_url }}
+             compression: xz
+    postprocess:
+        docker:
+            image: denysfcollabora/lavapost
+            steps:
+                - ls
+                - /add_modules.sh
+# Hack because of this bug: https://lava.collabora.co.uk/scheduler/job/5991934
+                - mv bzImage bzimage
+- deploy:
+    images:
+      bios:
+        image_arg: -bios {bios}
+        url: http://storage.kernelci.org/images/uefi/edk2-stable202005/x86_64/OVMF.fd
+      rootfs:
+        image_arg: -drive format=raw,file={rootfs},id=lavatest2,if=none
+        url: downloads://chromiumos_test_image.bin
+      kernel:
+        image_arg: -kernel {kernel} --append 'init=/sbin/init boot=local rootwait ro noresume noswap loglevel=7 earlyprintk=serial,keep console=tty0 console=ttyS0 i915.modeset=1 cros_efi cros_debug root=/dev/sda3 tsc=unstable'
+        url: downloads://bzImage
+{% else %}
 - deploy:
     images:
       bios:
@@ -16,8 +48,6 @@ actions:
         image_arg: -drive format=raw,file={rootfs},id=lavatest2,if=none
         url: {{ rootfs_url }}chromiumos_test_image.bin.gz
         compression: gz
-{% if fixed_kernel is not defined %}
-# FIXME not supported yet
 {% endif %}
     os: oe
     timeout:

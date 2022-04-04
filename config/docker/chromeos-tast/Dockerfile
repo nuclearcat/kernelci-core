@@ -42,4 +42,5 @@ RUN chmod 0600 "$HOME/.ssh/id_rsa"
 
 ADD tast-parser.py /home/cros-tast/tast-parser.py
 
+# Needed by LAVA to install the overlay
 USER root
