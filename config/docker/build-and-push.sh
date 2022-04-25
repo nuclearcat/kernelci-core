@@ -101,7 +101,7 @@ for target in $targets; do
             docker_build_and_tag "$cc"
         done
     elif [ "$target" = "kernelci" ]; then
-        core_rev=$(git show --pretty=format:%H -s origin/main)
+        core_rev=$(git show --pretty=format:%H -s origin/staging.kernelci.org)
         echo "kernelci-core revision: ${core_rev}"
         docker_build_and_tag kernelci "--build-arg core_rev=${core_rev}"
     else
