@@ -6,6 +6,6 @@ RUN echo 'deb http://apt.llvm.org/bullseye/ llvm-toolchain-bullseye main' \
    >> /etc/apt/sources.list.d/clang.list
 
 RUN apt-get update && apt-get install --no-install-recommends -y \
-    clang-15 lld-15 llvm-15
+    clang-15 dwarves lld-15 llvm-15 lz4
 
 ENV PATH=/usr/lib/llvm-15/bin:${PATH}
