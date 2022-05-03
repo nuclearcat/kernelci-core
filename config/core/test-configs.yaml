@@ -22,6 +22,9 @@ file_system_types:
   debian: &debian
     url: 'http://storage.kernelci.org/images/rootfs/debian'
     arch_map:
+      armel: [{arch: arm, variant: v4t},
+              {arch: arm, variant: v5},
+              {arch: arm, variant: v6}]
       armhf: [{arch: arm}]
       amd64: [{arch: x86_64}]
 
@@ -720,6 +723,7 @@ device_types:
 
   at91sam9g20ek:
     mach: at91
+    variant: v5
     class: arm-dtb
     boot_method: uboot
 
@@ -1074,20 +1078,20 @@ device_types:
 
   kirkwood-db-88f6282:
     mach: mvebu
+    variant: v5
     class: arm-dtb
     boot_method: uboot
     filters:
-        # To be removed once NFS is working with multi_v5_defconfig
-      - blocklist: {defconfig: ['allmodconfig', 'multi_v5_defconfig']}
+      - blocklist: {defconfig: ['allmodconfig']}
       - blocklist: {kernel: ['v3.']}
 
   kirkwood-openblocks_a7:
     mach: mvebu
+    variant: v5
     class: arm-dtb
     boot_method: uboot
     filters:
-        # To be removed once NFS is working with multi_v5_defconfig
-      - blocklist: {defconfig: ['allmodconfig', 'multi_v5_defconfig']}
+      - blocklist: {defconfig: ['allmodconfig']}
       - blocklist: {kernel: ['v3.']}
 
   kontron-bl-imx8mm:
@@ -2017,6 +2021,7 @@ test_configs:
   - device_type: at91sam9g20ek
     test_plans:
       - baseline
+      - baseline-nfs
 
   - device_type: bcm2711-rpi-4-b
     test_plans:
