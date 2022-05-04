@@ -799,9 +799,10 @@ class Step:
             output.append("# {}\n".format(cmd))
             output.append("#\n")
             output_file.write("".join(output))
+        print("DEBUG: limited log")
         if rel_path:
             file_path = os.path.relpath(file_path, rel_path)
-        cmd = "/bin/bash -c '(set -o pipefail; {} 2>&1 | tee -a {})'".format(
+        cmd = "/bin/bash -c '(set -o pipefail; {} 2>&1 | head -c1000k | tee -a {})'".format(
             cmd, file_path)
         return cmd
 
