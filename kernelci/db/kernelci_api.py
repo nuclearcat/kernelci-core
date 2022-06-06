@@ -118,6 +118,10 @@ class KernelCI_API(Database):
         resp = self._get(f'trigger_completed_event/{node_id}', params=params)
         return resp.json()
 
+    def get_child_nodes_from_event(self, event):
+        """Get child nodes from the event"""
+        return event.data['nodes']
+
     def pubsub_event_filter(self, sub_id, event):
         """Filter Pub/Sub events
 
