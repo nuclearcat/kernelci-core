@@ -39,9 +39,9 @@ class KernelCI_API(Database):
     def _make_url(self, path):
         return urllib.parse.urljoin(self.config.url, path)
 
-    def _get(self, path):
+    def _get(self, path, params=None):
         url = self._make_url(path)
-        resp = requests.get(url, headers=self._headers)
+        resp = requests.get(url, params=params, headers=self._headers)
         resp.raise_for_status()
         return resp
 
@@ -107,6 +107,16 @@ class KernelCI_API(Database):
         """ Get a list of regressions matching regression name"""
         resp = self._get('?'.join(['regressions', 'name=' + regression_name]))
         return json.loads(resp.text)
+
+    def get_completed_event(self, node_id, hours=0, minutes=0, seconds=0):
+        """Get an event when all child nodes are complete of a given node"""
+        params = {
+            'wait_time_hours': hours,
+            'wait_time_minutes': minutes,
+            'wait_time_seconds': seconds
+        }
+        resp = self._get(f'trigger_completed_event/{node_id}', params=params)
+        return resp.json()
 
     def pubsub_event_filter(self, sub_id, event):
         """Filter Pub/Sub events
