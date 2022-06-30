@@ -37,6 +37,7 @@ def main(args):
     k8s_success = True
     job_found = False
     sleep_secs = args.sleep
+    deadline_timestamp = time.time() + args.timeout
 
     if not context_valid(args.context):
         print("ERROR: unknown context", args.context)
@@ -55,8 +56,9 @@ def main(args):
     if retries == 0:
         print("ERROR: unable to load context {}.  Giving up.".format(args.context))
         sys.exit(1)
-  
-    print("Waiting for job completion. (recheck every {} sec) ".format(sleep_secs))
+
+    print(f'Waiting for job completion. (recheck every {sleep_secs} sec,'
+          f'timeout {args.timeout})')
 
     #
     # wait for job to finish
@@ -77,9 +79,12 @@ def main(args):
 
         job_found = True
         if job.status.active or not job.status.conditions:
-            print(".")
-            time.sleep(sleep_secs)
-            continue
+            if time.time() > deadline_timestamp:
+                print("Deadline exceed")
+            else:
+                print(".")
+                time.sleep(sleep_secs)
+                continue
 
         build_success = job_succeeded(job)
         if build_success:
@@ -124,7 +129,8 @@ def main(args):
     # initContainer failed, the main container will not have run
     if (pod.items[0].spec.init_containers):
         init_cont_name = pod.items[0].spec.init_containers[0].name
-        if not pod.items[0].status.init_container_statuses[0].ready:
+        if pod.items[0].status.init_container_statuses is not None\
+            and not pod.items[0].status.init_container_statuses[0].ready:
             print("ERROR: initContainer {} not ready / failed.".format(init_cont_name))
             cont_name = init_cont_name
             k8s_success = False
@@ -162,6 +168,8 @@ if __name__ == "__main__":
     parser.add_argument('--job-name')
     parser.add_argument('--namespace', default='default')
     parser.add_argument('--sleep', type=int, default=60)
+    # Default timeout 42 minutes as Jenkins timeout is 45 minutes
+    parser.add_argument('--timeout', type=int, default=2520)
     parser.add_argument('--no-delete', dest='delete', default=True, action='store_false')
     args = parser.parse_args()
     main(args)

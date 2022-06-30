@@ -16,6 +16,7 @@ def env_override(value, key):
 def job_create(yaml_output, namespace):
     d = os.getenv('DEFCONFIG').split('+')
     defconfig = d[0]
+    defconfig = "FIXEDSTRING"
     frag = None
     if len(d) > 1:
         frag = d[1]
