@@ -2283,7 +2283,13 @@ test_configs:
       - baseline-nfs
       - igt-gpu-etnaviv
       - kselftest-alsa
+      - kselftest-capabilities
+      - kselftest-cgroup
+      - kselftest-exec
+      - kselftest-futex
+      - kselftest-kcmp
       - ltp-crypto
+      - preempt-rt
 
   - device_type: imx6q-nitrogen6x
     test_plans:
@@ -2316,7 +2322,13 @@ test_configs:
       - baseline-nfs
       - igt-gpu-etnaviv
       - kselftest-alsa
+      - kselftest-capabilities
+      - kselftest-cgroup
+      - kselftest-exec
+      - kselftest-futex
+      - kselftest-kcmp
       - ltp-crypto
+      - preempt-rt
 
   - device_type: imx6q-var-dt6customboard
     test_plans:
