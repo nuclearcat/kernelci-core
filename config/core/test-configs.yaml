@@ -2439,7 +2439,6 @@ test_configs:
   - device_type: meson-g12a-sei510
     test_plans:
       - baseline
-      - baseline-fastboot
 
   - device_type: meson-g12a-u200
     test_plans:
