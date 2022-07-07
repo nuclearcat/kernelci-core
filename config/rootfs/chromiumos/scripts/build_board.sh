@@ -17,6 +17,12 @@ function cleanup()
 
 trap cleanup EXIT
 
+echo "Preparing depot tools"
+cd /home/user/chromiumos
+git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+export PATH="/home/user/chromiumos/depot_tools:${PATH}"
+cd ${DATA_DIR}
+
 echo "Preparing environment, branch ${BRANCH}"
 sudo mkdir chromiumos-sdk
 sudo chown user chromiumos-sdk
