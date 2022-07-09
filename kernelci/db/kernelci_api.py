@@ -97,6 +97,10 @@ class KernelCI_API(Database):
         resp = self._get('/'.join(['node', node_id]))
         return json.loads(resp.text)
 
+    def get_nodes(self):
+        resp = self._get('nodes')
+        return resp.json()
+
     def get_nodes_by_commit_hash(self, commit_hash):
         """
         Get list of node objects matching the commit SHA-1
