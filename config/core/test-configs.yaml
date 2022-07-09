@@ -1572,6 +1572,19 @@ device_types:
     filters:
       - passlist: {defconfig: ['defconfig']}
 
+  qemu_sparc64:
+    base_name: qemu
+    mach: qemu
+    arch: sparc64
+    boot_method: qemu
+    context:
+      arch: sparc64
+      guestfs_interface: 'ide'
+      machine: 'sun4u'
+      no_kvm: True
+      memory: 384
+      model: 'model=sunhme'
+
   qemu_x86_64: &qemu_x86_64
     base_name: qemu
     mach: qemu
@@ -2721,6 +2734,10 @@ test_configs:
       - baseline_qemu
 
   - device_type: qemu_riscv64
+    test_plans:
+      - baseline_qemu
+
+  - device_type: qemu_sparc64
     test_plans:
       - baseline_qemu
 
