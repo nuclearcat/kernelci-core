@@ -45,9 +45,10 @@ class KernelCI_API(Database):
         resp.raise_for_status()
         return resp
 
-    def _post(self, path, data=None):
+    def _post(self, path, data=None, params=None):
         url = self._make_url(path)
-        resp = requests.post(url, headers=self._headers, data=data)
+        resp = requests.post(url, headers=self._headers, params=params,
+                             data=data)
         resp.raise_for_status()
         return resp
 
@@ -56,6 +57,14 @@ class KernelCI_API(Database):
         resp = requests.put(url, headers=self._headers, data=data)
         resp.raise_for_status()
         return resp
+
+    def create_user(self, username, password, is_admin):
+        """Create new user"""
+        path = '/'.join(['user', username])
+        params = {'is_admin': is_admin}
+        data = {'password': password}
+        resp = self._post(path, data=json.dumps(data), params=params)
+        return resp.json()
 
     def subscribe(self, channel):
         resp = self._post(f'subscribe/{channel}')
