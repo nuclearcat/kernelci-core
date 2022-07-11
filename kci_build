@@ -24,6 +24,8 @@ import kernelci
 import kernelci.build
 import kernelci.config
 import kernelci.storage
+import subprocess
+import os
 
 
 class cmd_validate(Command):
@@ -401,6 +403,16 @@ class cmd_push_kernel(Command):
         install = kernelci.build.Step.get_install_path(args.kdir, args.output)
         meta = kernelci.build.Metadata(install)
         publish_path = meta.get('bmeta', 'kernel', 'publish_path')
+        defconfig = meta.get('bmeta', 'kernel', 'defconfig')
+        # gki_defconfig is exceptional and generate hundreds of megabytes
+        # kernel.log and kernel image size, which require compression
+        # to workaround current upload limits
+        if (defconfig == "gki_defconfig"):
+            kernel_fname = meta.get('bmeta', 'kernel', 'image')
+            compressed_artifacts = ["logs/kernel.log"]
+            compressed_artifacts.append("kernel/"+kernel_fname)
+            for e in compressed_artifacts:
+                subprocess.run(["xz", "-9", os.path.join(install, e)])
         artifacts = kernelci.storage.discover_files(install)
         print("Upload path: {}".format(publish_path))
         kernelci.storage.upload_files(

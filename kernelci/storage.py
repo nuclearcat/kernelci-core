@@ -57,6 +57,11 @@ def upload_files(api, token, path, input_files):
         'file{}'.format(i): (name, fobj)
         for i, (name, fobj) in enumerate(input_files.items())
     }
+    for key in files:
+        # Temporary hack
+        fname = os.path.join('/tmp/kci/linux/build/_install_/', files[key][0])
+        print(files[key][0])
+        print(os.path.getsize(fname))
     url = urljoin(api, 'upload')
     resp = requests.post(url, headers=headers, data=data, files=files)
     resp.raise_for_status()
