@@ -802,6 +802,24 @@ class Step:
         cmd = 'grep -cq CONFIG_{}=y {}'.format(config_name, dot_config)
         return shell_cmd(cmd, True)
 
+    def _kernel_config_nonempty(self, opt_name):
+        dot_config = os.path.join(self._output_path, '.config')
+        with open(dot_config, 'r') as fp:
+            lines = fp.readlines()
+            for line in lines:
+                pcfg = line.strip().split('=')
+                if len(pcfg) > 1 and pcfg[0] == opt_name and len(pcfg[1]) > 2:
+                    return True
+        return False
+
+    def _kernel_config_append(self, opt_name, opt_value):
+        dot_config = os.path.join(self._output_path, '.config')
+        # If we append existing config option, it will issue warning
+        # but reassign to new config option
+        with open(dot_config, 'a') as fp:
+            line = f"{opt_name}={opt_value}\n"
+            fp.write(line)
+
     def _output_to_file(self, cmd, file_path, rel_path=None):
         with open(file_path, 'a') as output_file:
             output = ["#\n"]
@@ -1228,6 +1246,21 @@ class MakeKernel(Step):
         *verbose* is whether the build output should be shown
         """
         bmeta = self._meta.get('bmeta')
+        # Fetch linux firmware if this option enabled
+        # it means we need to have it ready to be embedded during build
+        if self._kernel_config_nonempty('CONFIG_EXTRA_FIRMWARE'):
+            print("Fetching firmware")
+            homedir = os.getenv("HOME")
+            shell_cmd(f"""
+set -ex
+git clone --depth=1 \
+git://git.kernel.org/pub/scm/linux/kernel/git/firmware/linux-firmware.git \
+{homedir}/linux-firmware
+""")
+            # We need to override directory where firmware stored
+            self._kernel_config_append('CONFIG_EXTRA_FIRMWARE_DIR',
+                                       f'"{homedir}/linux-firmware"')
+
         if self._kernel_config_enabled('XIP_KERNEL'):
             target = 'xipImage'
         elif self._kernel_config_enabled('SYS_SUPPORTS_ZBOOT'):
