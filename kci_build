@@ -406,6 +406,7 @@ class cmd_push_kernel(Command):
 
     def __call__(self, configs, args):
         install = kernelci.build.Step.get_install_path(args.kdir, args.output)
+        print(install)
         meta = kernelci.build.Metadata(install)
         publish_path = meta.get('bmeta', 'kernel', 'publish_path')
         defconfig = meta.get('bmeta', 'kernel', 'defconfig')
