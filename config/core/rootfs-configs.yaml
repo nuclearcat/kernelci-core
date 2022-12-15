@@ -1,8 +1,8 @@
 rootfs_configs:
   buildroot-baseline:
     rootfs_type: buildroot
-    git_url: https://github.com/kernelci/buildroot
-    git_branch: main
+    git_url: https://github.com/nuclearcat/buildroot
+    git_branch: update-rebased-bootrr
     arch_list:
       - arc
       - arm64
