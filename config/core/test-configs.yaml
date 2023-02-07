@@ -3086,6 +3086,8 @@ test_configs:
       - baseline
       - baseline-nfs
       - cros-ec
+      - igt-gpu-msm
+      - igt-kms-msm
       - kselftest-alsa
 
   - device_type: sc7180-trogdor-lazor-limozeen
