@@ -26,10 +26,11 @@ echo '{  "tests_suites": [' >> $BUILDFILE
 # Build and install tests                                              #
 ########################################################################
 
-CROS_URL="https://github.com/kernelci/cros-ec-tests.git"
+#CROS_URL="https://github.com/kernelci/cros-ec-tests.git"
+CROS_URL="https://github.com/penvirus/cros-ec-tests"
 CROS_SHA=$(git ls-remote ${CROS_URL} | head -n 1 | cut -f 1)
 
-pip3 install git+${CROS_URL}@${CROS_SHA}
+pip3 install git+${CROS_URL}@for-clean-up
 
 echo '    {"name": "cros-ec-tests", "git_url": "'$CROS_URL'", "git_commit": "'$CROS_SHA'" }' >> $BUILDFILE
 echo '  ]}' >> $BUILDFILE
