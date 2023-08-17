@@ -304,9 +304,6 @@ test_plans:
         camera.V4L2.certification
         camera.V4L2Compliance
         camera.V4L2.supported_formats
-        graphics.VAAPIUnittest.webp_decoder
-        graphics.VAAPIUnittest.jpeg_decoder
-        graphics.VAAPIUnittest.common
         video.PlatformVAAPIUnittest
         graphics.Clvk.api_tests
         graphics.Clvk.simple_test
