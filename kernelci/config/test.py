@@ -83,6 +83,9 @@ class DeviceType(_YAMLObject):
 
     @property
     def dtb(self):
+        # convert to list for backward compatibility
+        if isinstance(self._dtb, str):
+            return [self._dtb]
         return self._dtb
 
     @property

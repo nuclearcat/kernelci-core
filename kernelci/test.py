@@ -76,9 +76,12 @@ def match_configs(configs, meta, lab):
     for test_config in configs:
         if not test_config.match(arch, flags, filters):
             continue
-        dtb = test_config.device_type.dtb
-        if dtb and (not dtbs or dtb not in dtbs):
-            continue
+        allowed_dtbs = test_config.device_type.dtb
+        if allowed_dtbs:
+            is_dtbs_empty = not dtbs
+            is_no_overlap = not any(x in dtbs for x in allowed_dtbs)
+            if is_dtbs_empty or is_no_overlap:
+                continue
         for plan_name, plan in test_config.test_plans.items():
             if not plan.match(filters):
                 continue
@@ -104,13 +107,19 @@ def get_params(meta, target, plan_config, storage, device_id):
         return fmt if fmt in COMPRESSION_FORMATS else ''
 
     kernel, rev = (meta.get('bmeta', key) for key in ['kernel', 'revision'])
+    # find dtb in available dtbs that matches the target dtb
+    available_dtbs = meta.get_single_artifact('dtbs', attr='contents')
+    if target.dtb:
+        dtb = next((dtb for dtb in target.dtb if dtb in available_dtbs), None)
+    else:
+        dtb = None
     arch = target.arch
     variant = target.variant
-    dtb = dtb_full = target.dtb
+    dtb_full = dtb
     if dtb:
         dtb_dir = meta.get_single_artifact('dtbs', attr='path')
         if dtb_dir:
-            dtb = dtb_full = os.path.join(dtb_dir, target.dtb)
+            dtb = dtb_full = os.path.join(dtb_dir, dtb)
             dtb = os.path.basename(dtb)  # hack for dtbs in subfolders
     publish_path = kernel['publish_path']
     job_px = publish_path.replace('/', '-')
