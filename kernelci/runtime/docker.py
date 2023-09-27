@@ -32,7 +32,15 @@ class Docker(Runtime):
     def _load_env(self):
         if self.config.env_file and os.path.isfile(self.config.env_file):
             with open(self.config.env_file, encoding='utf-8') as env:
-                return [line.strip() for line in env.readlines()]
+                return [line.strip() for line in env.readlines()
+                        if not line.startswith('#') and line.strip()]
+
+        # if KCI_STORAGE_CREDENTIALS set in environment, use it
+        if 'KCI_STORAGE_CREDENTIALS' in os.environ:
+            env = []
+            env.append(f"KCI_STORAGE_CREDENTIALS="
+                       f"{os.environ['KCI_STORAGE_CREDENTIALS']}")
+            return env
         return None
 
     @classmethod
@@ -71,7 +79,8 @@ class Docker(Runtime):
         image = meta['image']
         print(f"Pulling image {image}")
         self._client.images.pull(*image.split(':'))
-        print("Starting container")
+        print(f"Starting container under user {self.config.user}"
+              f"{self._env}")
         return self._client.containers.run(
             meta['image'],
             volumes=self.config.volumes,
