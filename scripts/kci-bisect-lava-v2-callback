@@ -21,6 +21,7 @@ import argparse
 import json
 import sys
 import yaml
+import base64
 
 # copied from lava-server/lava_scheduler_app/models.py
 SUBMITTED = 0
@@ -142,7 +143,9 @@ def main(args):
         cb = json.load(json_file)
 
     if args.token and cb['token'] != args.token:
-        print("Token mismatch")
+        b1 = base64.b64encode(cb['token'].encode('utf-8'))
+        b2 = base64.b64encode(args.token.encode('utf-8'))
+        print(f"Token mismatch: {b1} != {b2}")
         sys.exit(1)
 
     if is_infra_error(cb):
