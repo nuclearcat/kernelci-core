@@ -116,7 +116,11 @@ class Docker(Runtime):
         )
 
     def get_job_id(self, job_object):
-        return job_object.id
+        if job_object is None:
+            return None
+        if hasattr(job_object, 'id'):
+            return job_object.id
+        return None
 
     def wait(self, job_object):
         ret = job_object.wait()
