@@ -151,7 +151,6 @@ class KBuild():
                 self._dtbs_check = params['dtbs_check']
             else:
                 self._dtbs_check = False
-            self._disable_modules = params.get('disable_modules', False)
             self._apijobname = jobname
             self._steps = []
             self._artifacts = []
@@ -205,7 +204,6 @@ class KBuild():
             )
             self._full_artifacts = jsonobj['full_artifacts']
             self._dtbs_check = jsonobj['dtbs_check']
-            self._disable_modules = jsonobj['disable_modules']
             return
         raise ValueError("No valid arguments provided")
 
@@ -303,9 +301,8 @@ class KBuild():
         if not self._dtbs_check:
             self._artifacts.append("build_kimage.log")
             self._artifacts.append("build_kimage_stderr.log")
-            if not self._disable_modules:
-                self._artifacts.append("build_modules.log")
-                self._artifacts.append("build_modules_stderr.log")
+            self._artifacts.append("build_modules.log")
+            self._artifacts.append("build_modules_stderr.log")
             self._artifacts.append("build_kselftest.log")
             self._artifacts.append("build_kselftest_stderr.log")
             # disable DTBS for some archs
@@ -533,14 +530,12 @@ class KBuild():
             # We can check that if fragments have CONFIG_EXTRA_FIRMWARE
             self._fetch_firmware()
             self._build_kernel()
-            if not self._disable_modules:
-                self._build_modules()
+            self._build_modules()
             self._build_kselftest()
             if self._arch not in DTBS_DISABLED:
                 self._build_dtbs()
             self._package_kimage()
-            if not self._disable_modules:
-                self._package_modules()
+            self._package_modules()
             self._package_kselftest()
             if self._arch not in DTBS_DISABLED:
                 self._package_dtbs()
