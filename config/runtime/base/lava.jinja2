@@ -19,6 +19,14 @@ job_name: "[{{ instanceid|default('KernelCI AKS')}}] {{ node.id }} {{ node.name 
 
 device_type: {{ platform_config.name }}
 
+# If parameter tags is set in pipeline (list)
+{% if tags %}
+tags:
+{% for tag in tags %}
+  - {{ tag }}
+{% endfor %}
+{% endif %}
+
 visibility: public
 
 priority: {{ priority | default('10') }}
