@@ -1184,8 +1184,11 @@ trap 'case $stage in
         # This is second line of defense against kernel build failure,
         # if 'kernel' is not in artifacts, we assume it is a failure
         # but keep in mind dtbs_check can be run without kernel
-        if 'kernel' not in af_uri and not self._dtbs_check and job_result == 'pass':
-            job_result == 'fail'
+        if 'kernel' not in af_uri and not self._dtbs_check \
+           and job_result == 'pass' and self._arch != 'um':
+            print("[_submit] Kernel image not found in artifacts, setting job_result to fail")
+            self.submit_failure(
+                "Kernel image not found in artifacts, setting job_result to fail", af_uri)
 
         if job_result == 'pass':
             job_state = 'available'
