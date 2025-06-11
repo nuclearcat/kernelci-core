@@ -1076,7 +1076,7 @@ trap 'case $stage in
         with open(metadata_file, 'w') as f:
             json.dump(metadata, f, indent=4)
 
-    def submit_failure(self, message):
+    def submit_failure(self, message, af_uri=None):
         '''
         Submit to API that kbuild failed due internal error
         (Infrastructure failure)
@@ -1088,6 +1088,8 @@ trap 'case $stage in
             node['data'] = {}
         node['data']['error_code'] = 'kbuild_internal_error'
         node['data']['error_msg'] = message
+        if af_uri:
+            node['artifacts'] = af_uri
         api = kernelci.api.get_api(self._api_config, self._api_token)
         try:
             api.node.update(node)
@@ -1124,7 +1126,7 @@ trap 'case $stage in
         # 2 is infrastructure failure (incomplete),
         # 0 is success (pass)
         if retcode == 2:
-            self.submit_failure("Infrastructure failure")
+            self.submit_failure("Infrastructure failure", af_uri)
         elif retcode == 1:
             job_result = 'fail'
         else:
@@ -1183,7 +1185,7 @@ trap 'case $stage in
         # if 'kernel' is not in artifacts, we assume it is a failure
         # but keep in mind dtbs_check can be run without kernel
         if 'kernel' not in af_uri and not self._dtbs_check and job_result == 'pass':
-            self.submit_failure("Kernel image not found in artifacts")
+            job_result == 'fail'
 
         if job_result == 'pass':
             job_state = 'available'
