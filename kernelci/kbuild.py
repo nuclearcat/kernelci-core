@@ -1127,7 +1127,7 @@ trap 'case $stage in
         # 2 is infrastructure failure (incomplete),
         # 0 is success (pass)
         if retcode == 2:
-            self.submit_failure("Infrastructure failure")
+            self.submit_failure("Infrastructure failure", af_uri)
         elif retcode == 1:
             job_result = 'fail'
         else:
