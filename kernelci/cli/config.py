@@ -93,9 +93,10 @@ def validate_rules(node, rules):
     return helper.should_create_node(rules, node)
 
 
-def compare_builds(merged_data):
+def compare_builds(merged_data, kbuild_names=None):
     """
-    Compare kbuilds and print builds with identical params
+    Compare kbuilds and print builds with identical params.
+    Optionally limit the comparison to a specific list of kbuild names.
     """
     result = ""
     jobs = merged_data.get("jobs")
@@ -104,10 +105,13 @@ def compare_builds(merged_data):
                    "maybe you need to add parameter "
                    "-c path/kernelci-pipeline/config?")
         sys.exit(1)
-    kbuilds_list = []
-    for job in jobs:
-        if jobs[job].get("kind") == "kbuild":
-            kbuilds_list.append(job)
+    if kbuild_names is None:
+        kbuilds_list = [job for job in jobs if jobs[job].get("kind") == "kbuild"]
+    else:
+        kbuilds_list = [
+            name for name in kbuild_names
+            if jobs.get(name, {}).get("kind") == "kbuild"
+        ]
 
     kbuilds_dict = {}
     for kbuild in kbuilds_list:
@@ -227,7 +231,8 @@ def get_forecast_data(merged_data):
                 "tests": tests
             }
             checkout["kbuilds"].append(kbuild)
-        checkout["kbuilds_identical"] = compare_builds(merged_data)
+        kbuild_names = [build["name"] for build in checkout["kbuilds"]]
+        checkout["kbuilds_identical"] = compare_builds(merged_data, kbuild_names)
 
     return checkouts
 
